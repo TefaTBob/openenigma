@@ -237,7 +237,7 @@ void setup() {
   for (int index = 0 ; index <= 25; index++) {
     pinMode (plug[index], INPUT);
   }
-  Serial.begin(9600);
+  
   Serial3.begin(19200);
   delay(500);
   Serial3.write(29);
@@ -279,7 +279,7 @@ void loop() {
   else if(mode == 5) {mode5();}
   else {    }
 
-Serial.println(keyval); // for debuging prints keybord value to serial monitor// for run or del
+//Serial.println(keyval); // for debuging prints keybord value to serial monitor// for run or del
 
 }
 
@@ -329,7 +329,7 @@ if(kval < 99) {otime = millis();}
 
              //Starts key debounce timer
  if((kval >= 0) && (kval <= 99)) {windex = 1;}  //windex showing true (1) indicates the return of a fresh key stroke
- Serial.println(kval);
+ //Serial.println(kval);
  return kval;
 }
 
