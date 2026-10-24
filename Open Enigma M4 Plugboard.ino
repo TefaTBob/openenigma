@@ -203,6 +203,12 @@ static const int rotorvali[10][78] = { { 20,22,24, 6, 0, 3, 5,15,21,25, 1, 4, 2,
                                          4,11,15,25,7,0,23,9,13,24,3,17,10,5,2,19,18,8,1,12,6,22,16,21,14,20 } }; //Gamma i
                                                                                 
                                         
+// M3 (3-rotor) wide reflectors. The M4 reflectors above are the thin Kriegsmarine
+// versions, which only match an M3 reflector when paired with a 4th rotor.
+// Index with reflect[0] - 1:  0 = UKW-B wide, 1 = UKW-C wide
+static const int reflectwide[2][26] = { { 24,17,20,7,16,18,11,3,15,23,13,6,14,10,12,8,4,1,5,25,2,22,21,9,0,19 },     // = UKW-B wide  YRUHQSLDPXNGOKMIEBFZCWVJAT
+                                        { 5,21,15,9,8,0,14,24,4,3,17,25,23,22,6,2,19,10,20,16,18,1,13,12,7,11 } };   // = UKW-C wide  FVPJIAOYEDRZXWGCTKUQSBNMHL
+
 // Define a 2D Array for keeping the wheel locations & positions
 int wheel[4][3] = {{29,0,0},{28,0,0},{27,0,0},{1,0,0}};
 int reflect[2] = {1,0};
@@ -481,26 +487,31 @@ void mode0() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if(procesval < 0) {procesval = procesval + 26;}if(procesval > 25) {procesval = procesval - 26;}
    // Serial.print (procesval); Serial.print("   ");
-   
+
+    // M3 mode (behavior 2) has no 4th rotor and uses the wide reflectors;
+    // M4 modes go through the 4th rotor and the thin reflectors
+    if(behavior != 2) {
      pv = (procesval + (wheel[3][2] - wheel[3][1]));
     if(pv < 0) {pv = pv + 26;}
-    procesval = rotorvals[wheel[3][0] +7][pv]; 
+    procesval = rotorvals[wheel[3][0] +7][pv];
     if(procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if(procesval < 0) {procesval = procesval + 26;}if(procesval > 25) {procesval = procesval - 26;}
    // Serial.print (procesval); Serial.print("   ");
-   
-   
+
+
     procesval = rotorvals[reflect[0] + 9][procesval];
     //Serial.print (procesval); Serial.print("   ");
-    
-   
+
+
      pv = (procesval + (wheel[3][2] - wheel[3][1]));
     if(pv < 0) {pv = pv + 26;}
-    procesval = rotorvali[wheel[3][0] +7][pv]; 
+    procesval = rotorvali[wheel[3][0] +7][pv];
     if(procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if(procesval < 0) {procesval = procesval + 26;}if(procesval > 25) {procesval = procesval - 26;}
+    }
+    else {procesval = reflectwide[reflect[0] - 1][procesval];}
    //Serial.print (procesval); Serial.print("   ");
     
   
